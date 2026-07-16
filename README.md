@@ -1,4 +1,4 @@
-# Quantum Sensing
+# 🔬 Quantum Sensing
 
 ## Overview
 
