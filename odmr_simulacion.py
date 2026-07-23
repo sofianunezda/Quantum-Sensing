@@ -1,118 +1,405 @@
-# ========================================================
-# SIMULACIÓN DE UNA CURVA ODMR DE UN CENTRO NV EN DIAMANTE
-# ========================================================
+'''
+Simulación de curvas ODMR de un centro NV en diamante.
 
-import numpy as np                                  # librería 1: nos permite trabajar con vectores / cálculos numéricos
-import matplotlib.pyplot as plt                     # librería 2: nos permite dibujar las gráficas
+Este programa complementa el manual:
+"Introducción a los Sensores Cuánticos Basados en Centros NV en Diamante".
 
-# DATOS INICIALES
-D     = 2.87                                                    # Frecuencia de resonancia del centro NV (GHz)
-N     = 1000                                                    # Número de puntos del barrido
-B     = float(input('Introduce el campo magnético (mT): '))     # Campo magnético introducido por el usuario (mT)
+El código simula:
 
-if B < 0:                                                       # Pequeña comprobación
-    print('El campo magnético no puede ser menor que cero. ')
-    exit()
+1. Una curva ODMR sin campo magnético, con una resonancia centrada
+en la división de campo cero D = 2,87 GHz.
 
-B     = B / 1000                                                # Pasamos de mT a T
-gamma = 28                                                      # Relación giromagnética del electrón (GHz / T)
+2. Una curva ODMR en presencia de un campo magnético externo,
+mostrando el desdoblamiento Zeeman de las resonancias.
 
-# Frecuencias de resonancia debido al efecto Zeeman
-f1 = D - gamma*B
-f2 = D + gamma*B
+3. El cálculo del campo magnético a partir de la separación entre
+las dos frecuencias de resonancia.
 
-# El barrido se adapta automáticamente al campo magnético
-margen = max(0.02, 2*gamma*B) # GHz
+Autora: Sofía Núñez de Andrés
+Año: 2026
+'''
 
-f_min = min(f1, f2) - margen 
-f_max = max(f1, f2) + margen 
+import numpy as np                                             # librería 1: nos permite trabajar con vectores / cálculos numéricos # type: ignore
+import matplotlib.pyplot as plt                                # librería 2: nos permite dibujar las gráficas                       # type: ignore
+from datetime import datetime                                  # librería 3: nos permite poner la fecha y la hora real              # type: ignore
 
-frec  = np.linspace(f_min, f_max, N)  # Vector de frecuencias del barrido
+print("\n")
+print("\n===========================================================")
+print(" SIMULADOR ODMR - CENTROS NV EN DIAMANTE")
+print("===========================================================")
+
+# ============================================================
+# PARÁMETROS FÍSICOS DEL CENTRO NV
+D         = 2.87                                               # División de campo cero (GHz)
+gamma     = 28                                                 # Relación giromagnética (GHz/T)
+# ============================================================
+
+# ============================================================
+# PARÁMETROS DE LA SIMULACIÓN
+N            = 1000                                            # Número de puntos del barrido
+ancho        = 0.003                                           # Anchura de la resonancia (GHz)
+contraste    = 0.080                                           # Contraste óptico
+
+rng = np.random.default_rng()                                  # Generador de números aleatorios
+# ============================================================
+
+# ============================================================
+# ENTRADA DE PARÁMETROS
 
 
+entrada_B    = input("\n-> Campos magnéticos (mT) [3]            : ")
+B            = float(entrada_B) if entrada_B else 3.0
+
+entrada_P    = input("-> Potencia de microondas (dBm) [0]      : ")
+potencia_dBm = float(entrada_P) if entrada_P else 0.0
+
+entrada_F    = input("-> Tasa de fotones (fotones/s) [1000000] : ")
+tasa_fotones = float(entrada_F) if entrada_F else 1_000_000
+
+entrada_R    = input("-> Nivel de ruido (0 - 0.01) [0.0008]    : ")
+nivel_ruido  = float(entrada_R) if entrada_R else 0.0008
+
+entrada_N    = input("-> Número de puntos [1000]               : ")
+N            = float(entrada_N) if entrada_N else 1000
+
+if B < 0:
+    raise ValueError("El campo magnético debe ser positivo.")
+
+if tasa_fotones <= 0:
+    raise ValueError("La tasa de fotones debe ser positiva.")
+
+if nivel_ruido < 0:
+    raise ValueError("El nivel de ruido no puede ser negativo.")
+
+if N < 100:
+    raise ValueError("El número de puntos debe ser al menos 100.")
+
+B = B / 1000
+# ============================================================
+
+# ============================================================
+# FRECUENCIAS DE RESONANCIA
+f1 = D - gamma * B
+f2 = D + gamma * B
+# ============================================================
+
+# ============================================================
+# BARRIDOS DE FRECUENCIA
+# Barrido para la curva sin campo magnético
+margen_sin_campo = 0.03 # GHz
+frecuencias_sin_campo = np.linspace(D - margen_sin_campo, D + margen_sin_campo, N)
+
+# Barrido para la curva con campo magnético
+margen_con_campo = max(0.03, gamma * B + 0.02)
+frecuencias_con_campo = np.linspace(f1 - margen_con_campo, f2 + margen_con_campo, N)
+# ============================================================
+
+# ============================================================
 # FUNCIÓN CURVA ODMR
-def lorentziana(f, f0, ancho, contr):              
+def lorentziana(f, f0, ancho, contraste):
+    '''
+    Calcula una resonancia lorentziana normalizada.
+
+    Parámetros
+    ----------
+    · f         : array
+                  Frecuencias.
+    · f0        : float
+                  Frecuencia central.
+    · ancho     : float
+                  Anchura de la resonancia.
+    · contraste : float
+                  Profundidad máxima de la resonancia.
+    '''
+
+    return contraste * (ancho**2) / ((f - f0)**2 + ancho**2)
+# ============================================================
+
+# ============================================================
+# FUNCIÓN DE SENSIBILIDAD RELATIVA
+def calcular_sensibilidad_relativa(ancho_resonancia,contraste_optico,tasa_fotones_detectados):
     """
-    Calcula una resonancia con forma lorentziana.
+    Calcula un indicador relativo de sensibilidad magnética.
 
-    Parámetros:
-        · f  : vector de frecuencias
-        · f0 : frecuencia central de la resonancia
+    La expresión utilizada es:
 
-        · ancho : anchura de la resonancia
-        · contr : profundidad de la resonancia
+    sensibilidad ∝ anchura / (contraste * sqrt(tasa de fotones))
+
+    Un valor menor indica una mejor sensibilidad.
+
+    Esta magnitud es relativa y no se expresa en nT/sqrt(Hz),
+    porque sería necesaria una constante de calibración
+    experimental para obtener una sensibilidad absoluta.
     """
 
-    return contr*ancho/((f - f0)**2 + ancho**2)
+    if ancho_resonancia <= 0:
+        raise ValueError("La anchura de la resonancia debe ser positiva.")
 
-# CONSTRUCCIÓN CURVA ODMR
+    if contraste_optico <= 0:
+        raise ValueError("El contraste óptico debe ser positivo.")
 
-# Parámetros de la resonancia
-ancho = 0.003 
-contr = 0.080
+    if tasa_fotones_detectados <= 0:
+        raise ValueError("La tasa de fotones debe ser positiva.")
 
-fluor0 = 1 - lorentziana(frec, D, ancho, contr)      # Fluorescencia de la frecuencia; mínimo !!!!
+    sensibilidad_relativa = (ancho_resonancia / (contraste_optico* np.sqrt(tasa_fotones_detectados)))
 
-# -----------------------------------------------------------------------------------------------------------------
+    return sensibilidad_relativa
+# ============================================================
 
+# ============================================================
+# EFECTO DE LA POTENCIA DE MICROONDAS
+def ajustar_parametros_microondas(potencia_dBm,ancho_base,contraste_base):
+
+    if potencia_dBm < -30:
+        potencia_dBm = -30
+    if potencia_dBm > 20:
+        potencia_dBm = 20
+
+    # Contraste
+    if potencia_dBm <= 0:
+        contraste = contraste_base * (0.4 + (0.6 * (potencia_dBm + 30) / 30))
+    else:
+        contraste = contraste_base
+
+    # Anchura
+    if potencia_dBm <= 0:
+        ancho = ancho_base
+    else:
+        ancho = ancho_base * (1 + potencia_dBm / 20)
+
+    return ancho, contraste
+
+ancho, contraste = ajustar_parametros_microondas(potencia_dBm, ancho, contraste)
+
+# ============================================================
+# CONSTRUCCIÓN DE LAS CURVAS ODMR
+# Curva ODMR sin campo magnético:
+# una única resonancia centrada en D
+fluorescencia_sin_campo = (1 - lorentziana(frecuencias_sin_campo, D, ancho, contraste))
+
+# -------------------------------------------------------
+# Ruido experimental (sin campo)
+# -------------------------------------------------------
+fluorescencia_sin_campo_ruido = (fluorescencia_sin_campo + rng.normal(0, nivel_ruido, len(fluorescencia_sin_campo)))
+
+# Curva ODMR con campo magnético:
+# dos resonancias debidas al efecto Zeeman
+fluorescencia_con_campo = (1 - lorentziana(frecuencias_con_campo, f1, ancho, contraste) - lorentziana(frecuencias_con_campo, f2, ancho, contraste))
+
+# -------------------------------------------------------
+# Ruido experimental (con campo)
+# -------------------------------------------------------
+fluorescencia_con_campo_ruido = (fluorescencia_con_campo + rng.normal(0, nivel_ruido, len(fluorescencia_con_campo)))
+# ============================================================
+
+# ============================================================
+# LOCALIZACIÓN AUTOMÁTICA DE LAS RESONANCIAS
+# Índices correspondientes a los mínimos experimentales
+indice_f1 = np.argmin(fluorescencia_con_campo_ruido[:len(frecuencias_con_campo)//2])
+
+indice_f2 = (np.argmin(fluorescencia_con_campo_ruido[len(frecuencias_con_campo)//2:]) + len(frecuencias_con_campo)//2)
+
+# Frecuencias obtenidas experimentalmente
+f1_exp = frecuencias_con_campo[indice_f1]
+f2_exp = frecuencias_con_campo[indice_f2]
+# ============================================================
+
+# ============================================================
+# CÁLCULO DE LA SENSIBILIDAD RELATIVA
+sensibilidad_relativa = calcular_sensibilidad_relativa(ancho, contraste, tasa_fotones)
+# ============================================================
+
+# ============================================================
 # RESULTADOS
+# Separación obtenida a partir de la curva simulada
+separacion = f2_exp - f1_exp
 
-# Cálculo del campo magnético a partir de las resonancias
-separacion = f2 - f1
-B_calculado = separacion / (2 * gamma)
+# Campo recuperado a partir de la simulación
+B_calculado = separacion/(2*gamma)
 
-print("\n==============================")
-print("          RESULTADOS")
-print("==============================")
+# Error de la medida
+error = abs(B_calculado - B)
+error_relativo = 100*error/B if B != 0 else 0
 
-print(f"Campo introducido: {B*1000:.3f} mT")
-print(f"Resonancia 1: {f1:.6f} GHz")
-print(f"Resonancia 2: {f2:.6f} GHz")
-print(f"Separación: {separacion*1000:.2f} MHz")
-print(f"Campo calculado: {B_calculado*1000:.3f} mT")
+print("\n===========================================================")
+print(" PARÁMETROS DE LA SIMULACIÓN")
 
-# -----------------------------------------------------------------------------------------------------------------
+print(f"\n · Campo magnético             : {B*1000:.3f} mT")
+print(f" · Potencia de microondas      : {potencia_dBm:.1f} dBm")
+print(f" · Tasa de fotones             : {tasa_fotones:,.0f} fotones/s")
+print(f" · Nivel de ruido              : {nivel_ruido:.4f}")
+print(f" · Número de puntos            : {N}")
 
-# REPRESENTACIÓN CURVA ODMR SIN CAMPO
-plt.figure(figsize=(8,5))
+print("\n===========================================================")
 
-plt.plot(frec, fluor0)
+print("\n===========================================================")
+print(" RESULTADOS CON UN VALOR FIJO DE B")
 
-plt.xlabel('Frecuencia de microondas (GHz)')
-plt.ylabel('Flourescencia normalizada')
-plt.title('Simulación de una curva ODMR sin campo magnético')
+print(f"\n · Campo introducido : {B * 1000:.3f} mT")
 
-plt.axvline(D, linestyle='--', color = 'red', label=f'D = {D:.3f} GHz')
+print(f"\n · Resonancia 1 (experimental) : {f1_exp:.6f} GHz")
+print(f" · Resonancia 2 (experimental) : {f2_exp:.6f} GHz")
+print(f" · Separación                  : {separacion * 1000:.2f} MHz")
 
+print(f"\n · Campo calculado : {B_calculado * 1000:.3f} mT")
+
+print(f"\n · Error absoluto : {error*1000:.4f} mT")
+print(f" · Error relativo : {error_relativo:.3f} %")
+
+print(f"\n · Anchura de resonancia : {ancho * 1000:.3f} MHz")
+print(f" · Contraste óptico      : {contraste * 100:.2f} %")
+print(f" · Tasa de fotones       : {tasa_fotones:,.0f} fotones/s")
+
+print("\n · Indicador de sensibilidad relativa : " f"{sensibilidad_relativa:.3e}")
+# ============================================================
+
+# ============================================================
+# REPRESENTACIÓN DE LA CURVA ODMR SIN CAMPO MAGNÉTICO
+plt.figure(figsize=(9, 5.5))
+
+plt.plot(frecuencias_sin_campo,    fluorescencia_sin_campo,       color="black",  linewidth=2.2,     label="Curva teórica")
+plt.scatter(frecuencias_sin_campo, fluorescencia_sin_campo_ruido, s=8, alpha=0.5, color="royalblue", label="Datos simulados")
+
+plt.axvline(D, linestyle="--", color="#007BFF", linewidth=1.8, alpha=0.7, label=f"D = {D:.3f} GHz")
+
+plt.xlabel("Frecuencia de microondas (GHz)")
+plt.ylabel("Fluorescencia normalizada")
+plt.title(f"Simulación ODMR sin campo magnético", fontsize=14, fontweight="bold", pad=18)
+plt.suptitle(f"Potencia = {potencia_dBm:.1f} dBm | " f"Fotones = {tasa_fotones:.1e} s⁻¹ | " f"Ruido = {nivel_ruido:.4f} | N = {N}", fontsize=10, fontstyle="italic", y=0.98)
+
+plt.legend(loc="best")
 plt.grid(True)
 plt.tight_layout()
 
-plt.savefig('odmr_sin_campo_magnético.png')
+plt.savefig("odmr_sin_campo_magnetico.png", dpi=300)
+# ============================================================
 
-# -----------------------------------------------------------------------------------------------------------------
+# ============================================================
+# REPRESENTACIÓN DE LA CURVA ODMR CON CAMPO MAGNÉTICO
+plt.figure(figsize=(9, 5.5))
 
-# CONSTRUCCIÓN DE LA CURVA ODMR
+plt.plot(frecuencias_con_campo,    fluorescencia_con_campo,       color="black",  linewidth=2.2,     label="Curva teórica")
+plt.scatter(frecuencias_con_campo, fluorescencia_con_campo_ruido, s=8, alpha=0.5, color="royalblue", label="Datos simulados")
 
-# Fluorescencia con dos resonancias
-flour = (1 - lorentziana(frec, f1, ancho, contr) - lorentziana(frec, f2, ancho, contr))
+plt.axvline(f1, linestyle="--", color="#FF1493", linewidth=1.8, alpha=0.7, label=f"f₁ = {f1:.3f} GHz")
+plt.axvline(f2, linestyle="--", color="#4B0082", linewidth=1.8, alpha=0.7, label=f"f₂ = {f2:.3f} GHz")
 
-# REPRESENTACIÓN CURVA ODMR CON CAMPO
-plt.figure(figsize=(8,5))
+plt.xlabel("Frecuencia de microondas (GHz)")
+plt.ylabel("Fluorescencia normalizada")
+plt.title(f"Simulación ODMR con campo magnético", fontsize=14, fontweight="bold", pad=18)
+plt.suptitle(f"B = {B*1000:.3f} mT | Potencia = {potencia_dBm:.1f} dBm | " f"Fotones = {tasa_fotones:.1e} s⁻¹ | " f"Ruido = {nivel_ruido:.4f} | N = {N}", fontsize=10, fontstyle="italic", y=0.98)
 
-plt.plot(frec, flour)
-
-plt.xlabel('Frecuencia de microondas (GHz)')
-plt.ylabel('Flourescencia normalizada')
-plt.title(f'Curva ODMR con campo magnético B = {B*1000:.1f} mT')
-
-plt.axvline(f1, linestyle='--', color = 'orange', label=f'f1 = {f1:.3f} GHz')
-plt.axvline(f2, linestyle='--', color = 'yellow', label=f'f2 = {f2:.3f} GHz')
-
+plt.legend(loc="best")
 plt.grid(True)
 plt.tight_layout()
 
-plt.savefig('odmr_con_campo_magnético.png')
+plt.savefig("odmr_con_campo_magnetico.png", dpi=300)
+# ============================================================
+
+# ============================================================
+# GUARDADO DE RESULTADOS EN UN ARCHIVO TXT
+
+with open("resultados_ODMR.txt", "w", encoding="utf-8") as archivo:
+    archivo.write("="*60 + "\n")
+    archivo.write(" "*10 + "SIMULADOR ODMR - CENTROS NV EN DIAMANTE\n")
+    archivo.write("="*60 + "\n\n")
+
+    archivo.write("-> PARÁMETROS DE LA SIMULACIÓN\n")
+    archivo.write("-"*60 + "\n")
+
+    archivo.write(f"• Campo magnético        : {B*1000:.3f} mT\n")
+    archivo.write(f"• Potencia de microondas : {potencia_dBm:.1f} dBm\n")
+    archivo.write(f"• Tasa de fotones        : {tasa_fotones:,.0f} fotones/s\n")
+    archivo.write(f"• Nivel de ruido         : {nivel_ruido:.4f}\n")
+    archivo.write(f"• Número de puntos       : {N}\n")
+
+    archivo.write("\n")
+
+    archivo.write("-> PARÁMETROS ODMR\n")
+    archivo.write("-"*60 + "\n")
+
+    archivo.write(f"• Anchura                : {ancho*1000:.2f} MHz\n")
+    archivo.write(f"• Contraste              : {contraste*100:.2f} %\n")
+
+    archivo.write("\n")
+
+    archivo.write("-> RESULTADOS\n")
+    archivo.write("-"*60 + "\n")
+
+    archivo.write(f"• Resonancia 1           : {f1_exp:.6f} GHz\n")
+    archivo.write(f"• Resonancia 2           : {f2_exp:.6f} GHz\n")
+    archivo.write(f"• Separación             : {separacion*1000:.2f} MHz\n")
+
+    archivo.write("\n")
+
+    archivo.write(f"• Campo calculado        : {B_calculado*1000:.3f} mT\n")
+    archivo.write(f"• Error absoluto         : {error*1000:.4f} mT\n")
+    archivo.write(f"• Error relativo         : {error_relativo:.3f} %\n")
+    archivo.write(f"• Sensibilidad           : {sensibilidad_relativa:.3e}\n")
+
+    archivo.write("\n")
+    archivo.write("="*60 + "\n")
+    archivo.write(" Archivo generado automáticamente por el simulador ODMR\n")
+    archivo.write(" Versión 1.0\n")
+    archivo.write("="*60 + "\n")
+    archivo.write(f" Fecha: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\n")
+    archivo.write("-"*60 + "\n")
+
+print("\n-> Los resultados se han guardado en 'resultados_ODMR.txt'")
+print("===========================================================")
+# ============================================================
+
+# ============================================================
+# COMPARACIÓN ESPECTROS PARA DISTINTOS VALORES DE B
+# Cálculos + Representación Gráfica:
+print("\n===========================================================")
+print(" RESULTADOS CON DISTINTOS VALORES DE B")
+
+entrada_C = input("\n-> Campos magnéticos (mT) [0,2.5,5,7.5,10] : ")      # El usuario introduce los campos
+
+print("===========================================================")
+
+if entrada_C:
+    campos = [float(x) for x in entrada_C.split(",")]
+else:
+    campos = [0,2.5,5,7.5,10]
+
+campo_maximo = max(abs(B_mT) for B_mT in campos) / 1000
+margen       = 0.03     # GHz
+
+frecuencia_min = D - gamma*campo_maximo - margen
+frecuencia_max = D + gamma*campo_maximo + margen
+frecuencias_comparacion = np.linspace(frecuencia_min, frecuencia_max, N)
+
+plt.figure(figsize=(9,5.5))
+
+for B_mT in campos:
+    B_comp = B_mT / 1000      # pasar a teslas
+
+    # Cálculo f1 y f2
+    f1_comp = D - gamma * B_comp
+    f2_comp = D + gamma * B_comp
+
+    # Cálculo fluorescencia
+    fluorescencia_comp = (1 - lorentziana(frecuencias_comparacion, f1_comp, ancho, contraste) - lorentziana(frecuencias_comparacion, f2_comp, ancho, contraste))
+
+    # Dibujar la curva
+    plt.plot(frecuencias_comparacion, fluorescencia_comp, linewidth=2.2, label=f"{B_mT:g} mT")
+
+plt.xlabel("Frecuencia de microondas (GHz)")
+plt.ylabel("Fluorescencia normalizada")
+
+plt.title("Comparación de espectros ODMR para distintos campos magnéticos", fontsize=14, fontweight="bold", pad=18)
+plt.suptitle("Espectros simulados para distintos campos magnéticos", fontsize=10, fontstyle="italic", y=0.98)
+
+plt.legend(title="Campo magnético")
+plt.grid(True)
+plt.tight_layout()
+
+plt.savefig("comparacion_campos_magneticos.png", dpi=300)
 plt.show()
+# ============================================================
+# Fin del programa.
 
 
 
