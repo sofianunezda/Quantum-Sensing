@@ -6,30 +6,19 @@ Educational notes and Python simulations on nitrogen-vacancy (NV) centers in dia
 
 ## 📖 Study Manual
 
-A complete introductory manual on NV-center quantum sensing, developed during my research intership at CINN, is included in this repository.
+This repository includes a complete introductory manual on quantum sensing based on NV centers in diamond, written during my research internship at the Nanomaterials and Nanotechnology Research Center (CINN).
+
+The manual covers the physical principles of NV centers, ODMR, microwave instrumentation, radiofrequency generators and spectrum analyzers, serving as a practical introduction to NV-based quantum sensing.
 
 ---
 
 ## Overview
 
-This repository contains my study notes, technical documentation and learning material related to quantum sensing with nitrogen-vacancy (NV) centers in diamond.
+This repository contains my study notes, technical documentation and educational material related to quantum sensing with nitrogen-vacancy (NV) centers in diamond.
 
 The project was developed during my summer research internship at the Nanomaterials and Nanotechnology Research Center (CINN), where I am studying the fundamentals of quantum sensing, microwave instrumentation and ODMR (Optically Detected Magnetic Resonance).
 
 Besides theoretical material, the repository includes an interactiva Python program tha simulates ODMR spectra under different experimental conditions and reconstructs the external magnetic field from the resonance frequencies.
-
----
-
-## Topics
-
-- Quantum sensing
-- ODMR
-- NV Centers
-- Python
-- Simulation
-- Physics
-- Diamond
-- Quantum Physics
 
 ---
 
@@ -44,7 +33,7 @@ Besides theoretical material, the repository includes an interactiva Python prog
 
 ---
 
-## 🖥️ ODMR Simulator
+## 🐍 ODMR Simulator
 
 The repository includes an interactive Python simulator that reproduces the ODMR spectrum of a single NV center in diamond under different experimental conditions.
 
@@ -137,8 +126,55 @@ Key references include:
 
 ---
 
+## ▶️ How to Run
 
+Clone the repository:
 
+```bash
+git clone https://github.com/sofianunezda/Quantum-sensing.git
+```
 
+Install the required packages:
 
+```bash
+pip install numpy matplotlib scipy
+```
+
+Run the simulator:
+
+```bash
+python odmr_simulation.py
+```
+
+---
+
+## 🎯Project Goals 
+
+The aim of this repository is to provide an accessible introduction to quantum sensing based on nitrogen-vacancy (NV) centers in diamond by combining theoretical background with interactive numerical simulations.
+
+The project is intended for physics students, researchers beginning in the field and anyone interested in understanding the fundamental principles of NV-based quantum sensing.
+
+---
+
+## 📄 License
+
+This project is intended for educational and research purposes.
+
+The source code and documentation are available for academic use. Please cite or acknowledge this repository if you use its material in your own work.
+
+---
+
+## 👩‍🔬 Author
+
+**Sofía Núñez de Andrés**
+
+Physics Student
+University of Oviedo
+
+Research internship at the Nanomaterials and Nanotechnology Research Center (CINN)
+
+GitHub:
+https://github.com/sofianunezda
+
+---
 
