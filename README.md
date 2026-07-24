@@ -12,7 +12,7 @@ Educational notes and Python simulations on nitrogen-vacancy (NV) centers in dia
 
 This repository includes a complete introductory manual on quantum sensing based on NV centers in diamond, written during my research internship at the Nanomaterials and Nanotechnology Research Center (CINN).
 
-The manual covers the physical principles of NV centers, ODMR, microwave instrumentation, radiofrequency generators and spectrum analyzers, serving as a practical introduction to NV-based quantum sensing.
+The manual covers the physical principles of NV centers in diamond, quantum sensing, ODMR, magnetic sensitivity, microwave instrumentation, radiofrequency signal generators and spectrum analyzers, serving as a practical introduction to NV-based quantum sensing.
 
 The complete study manual is available in the `docs` folder:
 
