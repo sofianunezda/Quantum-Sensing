@@ -68,17 +68,17 @@ The simulator allows the user to modify the main experimental parameters, visual
 
 ## Example Outputs
 ### ODMR Spectrum without magnetic field
-![ODMR without magnetic field](images/odmr_sin_campo_magnetico.png)
+![ODMR without magnetic field](images/odmr_without_magnetic_field.png)
 
 ---
 
 ### ODMR Spectrum with external magnetic field
-![ODMR with magnetic field](images/odmr_con_campo_magnetico.png)
+![ODMR with magnetic field](images/odmr_with_magnetic_field.png)
 
 ---
 
 ### Comparison of different magnetic fields
-![Comparison of magnetic fields](images/comparacion_campos_magneticos.png)
+![Comparison of magnetic fields](images/comparation_magnetic_fields.png)
 
 ---
 
