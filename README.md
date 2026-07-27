@@ -4,7 +4,7 @@ Educational notes and Python simulations on nitrogen-vacancy (NV) centers in dia
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Version](https://img.shields.io/badge/Version-v1.0.0-orange)
+![Version](https://img.shields.io/badge/Version-v1.1.0-orange)
 
 ---
 
@@ -26,7 +26,7 @@ This repository contains my study notes, technical documentation and educational
 
 The project was developed during my summer research internship at the Nanomaterials and Nanotechnology Research Center (CINN), where I am studying the fundamentals of quantum sensing, microwave instrumentation and ODMR (Optically Detected Magnetic Resonance).
 
-Besides theoretical material, the repository includes an interactiva Python program tha simulates ODMR spectra under different experimental conditions and reconstructs the external magnetic field from the resonance frequencies.
+Besides theoretical material, the repository includes an interactive Python program that simulates ODMR spectra under different experimental conditions and reconstructs the external magnetic field from the resonance frequencies.
 
 ---
 
@@ -59,7 +59,7 @@ The simulator allows the user to modify the main experimental parameters, visual
  - ✅ Adjustable experimental noise
  - ✅ Automatic resonance detection
  - ✅ Magnetic field estimation
- - ✅ Relative sensitivity calculation
+ - ✅ Approximate magnetic sensitivity estimation
  - ✅ Comparison of multiple magnetic fields
  - ✅ Automatic PNG figure generation
  - ✅ Automatic TXT report generation
@@ -90,7 +90,7 @@ Current status of the project:
 - ✅ Study of nitrogen-vacancy (NV) centers in diamond
 - ✅ ODMR theoretical foundations
 - ✅ Educational notes and technical summaries
-- ✅ Python ODMR simulator (Version 1.0)
+- ✅ Python ODMR simulator (Version v1.0.0)
 - ✅ Automatic report generation
 - ✅ Figure generation for data visualization
 - 🔄 Continuous improvement of documentation and educational material
@@ -117,7 +117,6 @@ The simulator was developed in Python and requires:
 - Python 3.11 or later
 - NumPy
 - Matplotlib
-- SciPy
 
 ---
 
@@ -145,7 +144,7 @@ git clone https://github.com/sofianunezda/Quantum-sensing.git
 Install the required packages:
 
 ```bash
-pip install numpy matplotlib scipy
+pip install numpy matplotlib 
 ```
 
 Run the simulator:
@@ -166,9 +165,9 @@ The project is intended for physics students, researchers beginning in the field
 
 ## 📄 License
 
-This project is intended for educational and research purposes.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-The source code and documentation are available for academic use. Please cite or acknowledge this repository if you use its material in your own work.
+If you use the manual, code or figures in academic or educational work, acknowledgment of this repository is appreciated.
 
 ---
 
