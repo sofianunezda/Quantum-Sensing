@@ -70,8 +70,8 @@ if B < 0:
 if tasa_fotones <= 0:
     raise ValueError("La tasa de fotones debe ser positiva.")
 
-if nivel_ruido < 0:
-    raise ValueError("El nivel de ruido no puede ser negativo.")
+if not 0 <= nivel_ruido <= 0.01:
+    raise ValueError("El nivel de ruido debe estar entre 0 y 0.01.")
 
 if N < 100:
     raise ValueError("El número de puntos debe ser al menos 100.")
@@ -98,7 +98,7 @@ frecuencias_con_campo = np.linspace(f1 - margen_con_campo, f2 + margen_con_campo
 
 # ============================================================
 # FUNCIÓN CURVA ODMR
-def lorentziana(f, f0, ancho, contraste):
+def lorentziana(f, f0, ancho_fwhm, contraste):
     '''
     Calcula una resonancia lorentziana normalizada.
 
@@ -114,24 +114,22 @@ def lorentziana(f, f0, ancho, contraste):
                   Profundidad máxima de la resonancia.
     '''
 
-    return contraste * (ancho**2) / ((f - f0)**2 + ancho**2)
+    semiancho = ancho_fwhm / 2
+
+    return contraste * (semiancho**2) / ((f - f0)**2 + semiancho**2)
 # ============================================================
 
 # ============================================================
 # FUNCIÓN DE SENSIBILIDAD RELATIVA
-def calcular_sensibilidad_relativa(ancho_resonancia,contraste_optico,tasa_fotones_detectados):
+def calcular_sensibilidad(ancho_resonancia,gamma_E_GHz, contraste_optico,tasa_fotones_detectados):
     """
-    Calcula un indicador relativo de sensibilidad magnética.
+    Calcula la sensibilidad magnética.
 
     La expresión utilizada es:
 
-    sensibilidad ∝ anchura / (contraste * sqrt(tasa de fotones))
+    sensibilidad ∝ anchura / (gamma * contraste * sqrt(tasa de fotones))
 
     Un valor menor indica una mejor sensibilidad.
-
-    Esta magnitud es relativa y no se expresa en nT/sqrt(Hz),
-    porque sería necesaria una constante de calibración
-    experimental para obtener una sensibilidad absoluta.
     """
 
     if ancho_resonancia <= 0:
@@ -143,19 +141,16 @@ def calcular_sensibilidad_relativa(ancho_resonancia,contraste_optico,tasa_fotone
     if tasa_fotones_detectados <= 0:
         raise ValueError("La tasa de fotones debe ser positiva.")
 
-    sensibilidad_relativa = (ancho_resonancia / (contraste_optico* np.sqrt(tasa_fotones_detectados)))
+    sensibilidad = (ancho_resonancia / (gamma_E_GHz*contraste_optico* np.sqrt(tasa_fotones_detectados)))
 
-    return sensibilidad_relativa
+    return sensibilidad
 # ============================================================
 
 # ============================================================
 # EFECTO DE LA POTENCIA DE MICROONDAS
 def ajustar_parametros_microondas(potencia_dBm,ancho_base,contraste_base):
-
-    if potencia_dBm < -30:
-        potencia_dBm = -30
-    if potencia_dBm > 20:
-        potencia_dBm = 20
+    if not -30 <= potencia_dBm <= 20:
+        raise ValueError("La potencia debe estar entre -30 y 20 dBm. ")
 
     # Contraste
     if potencia_dBm <= 0:
@@ -179,14 +174,17 @@ ancho, contraste = ajustar_parametros_microondas(potencia_dBm, ancho, contraste)
 # una única resonancia centrada en D
 fluorescencia_sin_campo = (1 - lorentziana(frecuencias_sin_campo, D, ancho, contraste))
 
+# Curva ODMR con campo magnético:
+# dos resonancias
+if np.isclose(B, 0.0):
+    fluorescencia_con_campo = (1 - lorentziana(frecuencias_con_campo, D, ancho, contraste))
+else:
+    fluorescencia_con_campo = (1 - lorentziana(frecuencias_con_campo, f1, ancho, contraste) - lorentziana(frecuencias_con_campo, f2, ancho, contraste))
+
 # -------------------------------------------------------
 # Ruido experimental (sin campo)
 # -------------------------------------------------------
 fluorescencia_sin_campo_ruido = (fluorescencia_sin_campo + rng.normal(0, nivel_ruido, len(fluorescencia_sin_campo)))
-
-# Curva ODMR con campo magnético:
-# dos resonancias debidas al efecto Zeeman
-fluorescencia_con_campo = (1 - lorentziana(frecuencias_con_campo, f1, ancho, contraste) - lorentziana(frecuencias_con_campo, f2, ancho, contraste))
 
 # -------------------------------------------------------
 # Ruido experimental (con campo)
@@ -197,18 +195,26 @@ fluorescencia_con_campo_ruido = (fluorescencia_con_campo + rng.normal(0, nivel_r
 # ============================================================
 # LOCALIZACIÓN AUTOMÁTICA DE LAS RESONANCIAS
 # Índices correspondientes a los mínimos experimentales
-indice_f1 = np.argmin(fluorescencia_con_campo_ruido[:len(frecuencias_con_campo)//2])
+if np.isclose(B, 0.0):
+    indice_resonancia = np.argmin(fluorescencia_con_campo_ruido)
 
-indice_f2 = (np.argmin(fluorescencia_con_campo_ruido[len(frecuencias_con_campo)//2:]) + len(frecuencias_con_campo)//2)
+    f1_exp = frecuencias_con_campo[indice_resonancia]
+    f2_exp = f1_exp
 
-# Frecuencias obtenidas experimentalmente
-f1_exp = frecuencias_con_campo[indice_f1]
-f2_exp = frecuencias_con_campo[indice_f2]
+else:
+    mitad = len(frecuencias_con_campo) // 2
+
+    indice_f1 = np.argmin(fluorescencia_con_campo_ruido[:mitad])
+    indice_f2 = (np.argmin(fluorescencia_con_campo_ruido[mitad:]) + mitad)
+
+    f1_exp = frecuencias_con_campo[indice_f1]
+    f2_exp = frecuencias_con_campo[indice_f2]
+
 # ============================================================
 
 # ============================================================
-# CÁLCULO DE LA SENSIBILIDAD RELATIVA
-sensibilidad_relativa = calcular_sensibilidad_relativa(ancho, contraste, tasa_fotones)
+# CÁLCULO DE LA SENSIBILIDAD MAGNÉTICA
+sensibilidad = calcular_sensibilidad(ancho, gamma, contraste, tasa_fotones)
 # ============================================================
 
 # ============================================================
@@ -252,7 +258,7 @@ print(f"\n · Anchura de resonancia : {ancho * 1000:.3f} MHz")
 print(f" · Contraste óptico      : {contraste * 100:.2f} %")
 print(f" · Tasa de fotones       : {tasa_fotones:,.0f} fotones/s")
 
-print("\n · Indicador de sensibilidad relativa : " f"{sensibilidad_relativa:.3e}")
+print("\n · Sensibilidad magnética aproximada : " f"{sensibilidad * 1e6:.3f} {"\u00b5T/\u221aHz"}") 
 # ============================================================
 
 # ============================================================
@@ -266,7 +272,7 @@ plt.axvline(D, linestyle="--", color="#007BFF", linewidth=1.8, alpha=0.7, label=
 
 plt.xlabel("Frecuencia de microondas (GHz)")
 plt.ylabel("Fluorescencia normalizada")
-plt.title(f"Simulación ODMR sin campo magnético", fontsize=14, fontweight="bold", pad=18)
+plt.title("Simulación ODMR sin campo magnético", fontsize=14, fontweight="bold", pad=18)
 plt.suptitle(f"Potencia = {potencia_dBm:.1f} dBm | " f"Fotones = {tasa_fotones:.1e} s⁻¹ | " f"Ruido = {nivel_ruido:.4f} | N = {N}", fontsize=10, fontstyle="italic", y=0.98)
 
 plt.legend(loc="best")
@@ -274,6 +280,7 @@ plt.grid(True)
 plt.tight_layout()
 
 plt.savefig("odmr_sin_campo_magnetico.png", dpi=300)
+plt.close()
 # ============================================================
 
 # ============================================================
@@ -288,7 +295,7 @@ plt.axvline(f2, linestyle="--", color="#4B0082", linewidth=1.8, alpha=0.7, label
 
 plt.xlabel("Frecuencia de microondas (GHz)")
 plt.ylabel("Fluorescencia normalizada")
-plt.title(f"Simulación ODMR con campo magnético", fontsize=14, fontweight="bold", pad=18)
+plt.title("Simulación ODMR con campo magnético", fontsize=14, fontweight="bold", pad=18)
 plt.suptitle(f"B = {B*1000:.3f} mT | Potencia = {potencia_dBm:.1f} dBm | " f"Fotones = {tasa_fotones:.1e} s⁻¹ | " f"Ruido = {nivel_ruido:.4f} | N = {N}", fontsize=10, fontstyle="italic", y=0.98)
 
 plt.legend(loc="best")
@@ -296,6 +303,7 @@ plt.grid(True)
 plt.tight_layout()
 
 plt.savefig("odmr_con_campo_magnetico.png", dpi=300)
+plt.close()
 # ============================================================
 
 # ============================================================
@@ -309,35 +317,35 @@ with open("resultados_ODMR.txt", "w", encoding="utf-8") as archivo:
     archivo.write("-> PARÁMETROS DE LA SIMULACIÓN\n")
     archivo.write("-"*60 + "\n")
 
-    archivo.write(f"• Campo magnético                    : {B*1000:.3f} mT\n")
-    archivo.write(f"• Potencia de microondas             : {potencia_dBm:.1f} dBm\n")
-    archivo.write(f"• Tasa de fotones                    : {tasa_fotones:,.0f} fotones/s\n")
-    archivo.write(f"• Nivel de ruido                     : {nivel_ruido:.4f}\n")
-    archivo.write(f"• Número de puntos                   : {N}\n")
+    archivo.write(f"• Campo magnético                   : {B*1000:.3f} mT\n")
+    archivo.write(f"• Potencia de microondas            : {potencia_dBm:.1f} dBm\n")
+    archivo.write(f"• Tasa de fotones                   : {tasa_fotones:,.0f} fotones/s\n")
+    archivo.write(f"• Nivel de ruido                    : {nivel_ruido:.4f}\n")
+    archivo.write(f"• Número de puntos                  : {N}\n")
 
     archivo.write("\n")
 
     archivo.write("-> PARÁMETROS ODMR\n")
     archivo.write("-"*60 + "\n")
 
-    archivo.write(f"• Anchura                            : {ancho*1000:.2f} MHz\n")
-    archivo.write(f"• Contraste                          : {contraste*100:.2f} %\n")
+    archivo.write(f"• Anchura                           : {ancho*1000:.2f} MHz\n")
+    archivo.write(f"• Contraste                         : {contraste*100:.2f} %\n")
 
     archivo.write("\n")
 
     archivo.write("-> RESULTADOS\n")
     archivo.write("-"*60 + "\n")
 
-    archivo.write(f"• Resonancia 1                       : {f1_exp:.6f} GHz\n")
-    archivo.write(f"• Resonancia 2                       : {f2_exp:.6f} GHz\n")
-    archivo.write(f"• Separación                         : {separacion*1000:.2f} MHz\n")
+    archivo.write(f"• Resonancia 1                      : {f1_exp:.6f} GHz\n")
+    archivo.write(f"• Resonancia 2                      : {f2_exp:.6f} GHz\n")
+    archivo.write(f"• Separación                        : {separacion*1000:.2f} MHz\n")
 
     archivo.write("\n")
 
-    archivo.write(f"• Campo calculado                    : {B_calculado*1000:.3f} mT\n")
-    archivo.write(f"• Error absoluto                     : {error*1000:.4f} mT\n")
-    archivo.write(f"• Error relativo                     : {error_relativo:.3f} %\n")
-    archivo.write(f"• Indicador relativo de sensibilidad : {sensibilidad_relativa:.3e} \n")
+    archivo.write(f"• Campo calculado                   : {B_calculado*1000:.3f} mT\n")
+    archivo.write(f"• Error absoluto                    : {error*1000:.4f} mT\n")
+    archivo.write(f"• Error relativo                    : {error_relativo:.3f} %\n")
+    archivo.write(f"• Sensibilidad magnética aproximada : {sensibilidad * 1e6:.3f} {"\u00b5T/\u221aHz"}\n") 
 
     archivo.write("\n")
     archivo.write("="*60 + "\n")
@@ -362,9 +370,11 @@ entrada_C = input("\n-> Campos magnéticos (mT) [0,2.5,5,7.5,10] : ")      # El 
 print("===========================================================")
 
 if entrada_C:
-    campos = [float(x) for x in entrada_C.split(",")]
+    campos = [float(x.strip()) for x in entrada_C.split(",")]
 else:
     campos = [0,2.5,5,7.5,10]
+if not campos:
+    raise ValueError("Debe introducirse al menos un campo magnético. ")
 
 campo_maximo = max(abs(B_mT) for B_mT in campos) / 1000
 margen       = 0.03     # GHz
@@ -402,6 +412,7 @@ plt.grid(True)
 plt.tight_layout()
 
 plt.savefig("comparacion_campos_magneticos.png", dpi=300)
+plt.close()
 plt.show()
 # ============================================================
 # Fin del programa.
