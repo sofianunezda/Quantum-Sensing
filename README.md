@@ -6,6 +6,8 @@ Educational material and Python simulations on quantum sensing based on nitrogen
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Version](https://img.shields.io/badge/Version-v2.0-blue)
 
+![Quantum Sensing Preview](images/quantum_sensing_preview_collage.png)
+
 ---
 
 ## Overview
