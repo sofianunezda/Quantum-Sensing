@@ -1,0 +1,64 @@
+========================================================================
+ SIMULACIÓN ODMR DE UN CENTRO NV EN DIAMANTE
+ Sofía Núñez de Andrés - CINN, 2026
+========================================================================
+
+1. PARÁMETROS FÍSICOS DEL CENTRO NV
+------------------------------------------------------------------------
+División de campo cero, D     =     2.870000 GHz
+Relación giromagnética, gamma =    28.000000 GHz/T
+Perturbación transversal, E   =     0.000000 GHz
+Perturbación transversal, E   =     0.000000 MHz
+
+2. PARÁMETROS DEL ESPECTRO ODMR
+------------------------------------------------------------------------
+Número de puntos del barrido    =         1000
+Anchura FWHM de las resonancias =     0.003000 GHz
+Contraste por resonancia        =     0.080000
+Margen del barrido              =     0.030000 GHz
+Frecuencia mínima del barrido   =  2.756000000 GHz
+Frecuencia máxima del barrido   =  2.984000000 GHz
+
+3. CAMPO MAGNÉTICO INTRODUCIDO
+------------------------------------------------------------------------
+Módulo del campo              =     3.000000 mT
+Ángulo respecto al eje NV     =     0.000000 grados
+Componente Bx                 =  0.000000000 T
+Componente By                 =  0.000000000 T
+Componente Bz                 =  0.003000000 T
+Componente longitudinal, |Bz| =  3.000000000 mT
+
+4. RESULTADOS SIN CAMPO MAGNÉTICO
+------------------------------------------------------------------------
+Autovalores de H/h = 0.000000000, 2.870000000, 2.870000000 GHz
+Frecuencia de resonancia inferior =  2.870000000 GHz
+Frecuencia de resonancia superior =  2.870000000 GHz
+
+5. RESULTADOS CON CAMPO MAGNÉTICO
+------------------------------------------------------------------------
+Autovalores de H/h = 0.000000000, 2.786000000, 2.954000000 GHz
+Frecuencia de resonancia inferior =  2.786000000 GHz
+Frecuencia de resonancia superior =  2.954000000 GHz
+Separación entre resonancias      =  0.168000000 GHz
+
+6. ESTIMACIÓN DEL CAMPO MEDIANTE EL DESDOBLAMIENTO
+------------------------------------------------------------------------
+Componente longitudinal real, |Bz| =  3.000000000 mT
+Componente longitudinal estimada   =  3.000000000 mT
+Error de la estimación             =  0.000000000 mT
+Error porcentual                   =     0.000000 %
+Nota: la expresión utilizada es una aproximación lineal y estima
+principalmente la componente del campo paralela al eje NV.
+
+7. ARCHIVOS GENERADOS
+------------------------------------------------------------------------
+1. odmr_without_magnetic_field.png
+2. odmr_with_magnetic_field.png
+3. frequencies_vs_field.png
+4. frequencies_vs_angle.png
+5. evolution_odmr_with_magnetic_field.png
+6. results_odmr.txt
+
+========================================================================
+Fin de la simulación
+========================================================================
