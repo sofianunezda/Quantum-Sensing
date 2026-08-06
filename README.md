@@ -1,47 +1,84 @@
-# 🔬 Quantum Sensing
+# 🔬 Quantum Sensing with NV Centers in Diamond
 
 Educational material and Python simulations on quantum sensing based on nitrogen-vacancy (NV) centers in diamond.
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Version](https://img.shields.io/badge/Version-v2.0-blue)
-
-![Quantum Sensing Preview](images/quantum_sensing_preview_collage.png)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
 
 ---
 
-## Overview
+## 🌟 Overview
 
-This repository was developed during my extracurricular internship at the Nanomaterials and Nanotechnology Research Center (CINN, Spain).
+This repository was developed during my extracurricular internship at the **Nanomaterials and Nanotechnology Research Center (CINN), Spain**.
 
-It combines a complete introductory study manual on quantum sensing with an interactive Python simulator that reproduces Optically Detected Magnetic Resonance (ODMR) spectra of nitrogen-vacancy (NV) centers in diamond.
+It combines a comprehensive introductory study manual with an interactive Python simulator focused on **quantum sensing with nitrogen-vacancy (NV) centers in diamond**.
 
-The project aims to provide an accessible introduction to NV-based quantum sensing by combining theoretical background, educational figures and numerical simulations.
+The repository connects theoretical foundations with numerical simulation, allowing users to study the physical principles of NV centers and visualize how different experimental parameters modify Optically Detected Magnetic Resonance (ODMR) spectra.
+
+The project was designed as an educational resource for students beginning in quantum sensing, condensed-matter physics, quantum technologies or experimental instrumentation.
+
+---
+
+## ✨ Main Features
+
+- ✅ Complete 75-page introductory study manual
+- ✅ Original educational figures and technical diagrams
+- ✅ Complete scientific bibliography and figure attribution
+- ✅ Interactive Python ODMR simulator
+- ✅ Effective spin-1 Hamiltonian implementation
+- ✅ Numerical Hamiltonian diagonalization
+- ✅ Zero-field splitting
+- ✅ Zeeman interaction
+- ✅ Arbitrary magnetic-field orientation
+- ✅ Four crystallographic NV orientations
+- ✅ Transverse perturbation caused by strain or electric fields
+- ✅ Temperature dependence of the zero-field splitting
+- ✅ Lorentzian ODMR spectra
+- ✅ Microwave-power broadening
+- ✅ Photon shot-noise simulation
+- ✅ Technical-noise simulation
+- ✅ Magnetic-field estimation from resonance splitting
+- ✅ Magnetic-sensitivity estimation
+- ✅ Automatic generation of ten scientific figures
+- ✅ Automatic generation of a structured TXT simulation report
+- ✅ Reproducible simulations using a fixed random seed
 
 ---
 
 # 📖 Quantum Sensing Study Manual
 
-The repository includes a complete **75-page study manual** introducing the physical principles of quantum sensing based on nitrogen-vacancy (NV) centers in diamond.
+The repository includes a complete **75-page study manual** introducing the physical principles of quantum sensing based on nitrogen-vacancy centers in diamond.
 
 The manual was written during my internship at CINN as educational material for students beginning in this research field.
 
-Topics covered include:
+## Topics Covered
 
 - Fundamentals of quantum sensing
+- Physical quantities measured by quantum sensors
+- Advantages and limitations of quantum sensors
 - Diamond as a quantum material
-- Nitrogen-vacancy (NV) centers
-- Spin Hamiltonian
+- Nitrogen-vacancy centers
+- NV charge states
+- NV crystallographic orientations
+- Spin states of the NV center
+- Effective spin Hamiltonian
+- Spin-1 matrix representation
 - Zero-field splitting
 - Zeeman interaction
 - Electric-field and strain effects
+- Ground- and excited-state level anticrossings
 - Spin relaxation and coherence
-- Optically Detected Magnetic Resonance (ODMR)
+- Optically Detected Magnetic Resonance
+- ODMR spectrum interpretation
 - Magnetic sensitivity
 - Noise and signal-to-noise ratio
 - Microwave spin control
-- RF signal generators
+- Microwave antennas and transmission structures
+- Radiofrequency signal generators
 - Spectrum analyzers
+- Experimental instrumentation
 
 The manual also contains:
 
@@ -50,156 +87,246 @@ The manual also contains:
 - Commented equations
 - Figures adapted from scientific literature
 - Complete bibliography
-- Figure attribution table
+- Figure attribution and treatment table
+- Author notes and methodological explanations
 
 📄 **Study Manual**
 
-`docs/Quantum_Sensing_Study_Manual.pdf`
+[`Quantum_Sensing_Study_Manual.pdf`](Quantum_Sensing_Study_Manual.pdf)
 
 ---
 
 # 🐍 ODMR Python Simulator
 
-The repository includes an interactive Python simulator that reproduces ODMR spectra from a single NV center in diamond.
+The repository includes an interactive Python simulator that reproduces ODMR spectra of nitrogen-vacancy centers in diamond.
 
-The simulator numerically solves the effective spin Hamiltonian, calculates the resonance frequencies under different experimental conditions and estimates the longitudinal magnetic field from the Zeeman splitting.
+The simulator numerically constructs and diagonalizes the effective spin Hamiltonian, calculates resonance frequencies under different experimental conditions and generates ideal and noisy ODMR spectra.
 
-All simulation results are automatically exported as publication-quality figures together with a structured simulation report.
+It also analyzes the effect of magnetic field, orientation, temperature, transverse perturbations, microwave power and photon detection rate.
 
----
+## Simulator Capabilities
 
-## Current Features
-
-- ✅ Interactive user input
-- ✅ Complete spin Hamiltonian diagonalization
-- ✅ Zero-field splitting simulation
-- ✅ Zeeman interaction
-- ✅ Transverse perturbation (strain/electric field parameter)
-- ✅ Arbitrary magnetic-field orientation
-- ✅ ODMR spectrum without magnetic field
-- ✅ ODMR spectrum under an external magnetic field
-- ✅ Resonance-frequency calculation
-- ✅ Magnetic-field reconstruction from resonance frequencies
-- ✅ Automatic generation of PNG figures
-- ✅ Automatic generation of TXT reports
-
----
-
-# Generated Figures
-
-Each simulation automatically generates:
-
-- ODMR spectrum without magnetic field
-- ODMR spectrum with magnetic field
-- Resonance frequencies versus magnetic field
-- Resonance frequencies versus magnetic-field angle
-- ODMR evolution for different magnetic fields
-- Complete simulation report (.txt)
+- Interactive user input
+- Automatic use of default values
+- Single-axis NV model
+- Four crystallographic NV orientations
+- Zero-field ODMR simulation
+- ODMR under an external magnetic field
+- Magnetic-field vector decomposition
+- Magnetic-field projection onto each NV orientation
+- Resonance-frequency calculation
+- Magnetic-field reconstruction from Zeeman splitting
+- Temperature-dependent zero-field splitting
+- Transverse perturbation simulation
+- Microwave-power broadening
+- Photon shot-noise simulation
+- Technical Gaussian noise
+- Magnetic-sensitivity estimation
+- Minimum detectable magnetic-field estimation
+- Automatic PNG export
+- Automatic TXT report generation
 
 ---
 
-# Example Outputs
+# ⚛️ Physics Implemented
 
-## ODMR Spectrum without Magnetic Field
+The simulator includes the following physical model:
 
-![ODMR without magnetic field](images/odmr_without_magnetic_field.png)
+- Effective ground-state Hamiltonian for an NV center
+- Electronic spin \(S = 1\)
+- Zero-field splitting \(D \approx 2.87\ \text{GHz}\)
+- Zeeman interaction
+- Electron gyromagnetic ratio
+- Arbitrary magnetic-field orientation
+- Transverse perturbation parameter \(E\)
+- Numerical Hamiltonian diagonalization
+- Transition-frequency calculation
+- Four crystallographic directions of the NV center
+- Lorentzian ODMR line shapes
+- Temperature dependence of \(D\)
+- Microwave-power broadening
 
----
+The effective Hamiltonian used in the simulation includes:
 
-## ODMR Spectrum with an External Magnetic Field
+\[
+H = D S_z^2
++ E(S_x^2-S_y^2)
++ \gamma_e(B_xS_x+B_yS_y+B_zS_z)
+\]
 
-![ODMR with magnetic field](images/odmr_with_magnetic_field.png)
-
----
-
-## Resonance Frequencies vs Magnetic Field
-
-![Magnetic field](images/frequencies_vs_field.png)
-
----
-
-## Resonance Frequencies vs Angle
-
-![Angle](images/frequencies_vs_angle.png)
-
----
-
-## ODMR Evolution for Different Magnetic Fields
-
-![Evolution](images/evolution_odmr_with_magnetic_field.png)
+The program obtains the energy eigenvalues numerically and calculates the ODMR transition frequencies from the differences between the spin-energy levels.
 
 ---
 
-# Repository Contents
+# 📊 Generated Figures
 
-```
-Quantum-Sensing
+Each execution automatically generates ten figures.
+
+## 1. ODMR Spectrum without Magnetic Field
+
+Shows the zero-field ODMR resonances and the splitting produced by the transverse perturbation parameter \(E\).
+
+![ODMR without magnetic field](results_odmr/odmr_without_magnetic_field.png)
+
+---
+
+## 2. ODMR Spectrum with an External Magnetic Field
+
+Shows the Zeeman splitting of the ODMR resonances under an applied magnetic field.
+
+![ODMR with magnetic field](results_odmr/odmr_with_magnetic_field.png)
+
+---
+
+## 3. Resonance Frequencies versus Magnetic Field
+
+Represents the evolution of the two main resonance frequencies as the magnetic-field magnitude increases.
+
+![Resonance frequencies versus magnetic field](results_odmr/frequencies_vs_field.png)
+
+---
+
+## 4. Resonance Frequencies versus Magnetic-Field Angle
+
+Shows how the ODMR resonance frequencies depend on the angle between the magnetic field and the NV axis.
+
+![Resonance frequencies versus angle](results_odmr/frequencies_vs_angle.png)
+
+---
+
+## 5. ODMR Evolution with Magnetic Field
+
+Displays several ODMR spectra for different magnetic-field values.
+
+![ODMR evolution with magnetic field](results_odmr/evolution_odmr_with_magnetic_field.png)
+
+---
+
+## 6. ODMR Spectrum for Four NV Orientations
+
+Combines the transitions produced by the four crystallographic NV orientations in diamond.
+
+![Four NV orientations](results_odmr/odmr_four_nv_orientations.png)
+
+---
+
+## 7. Resonance Frequencies versus Temperature
+
+Shows the displacement of the ODMR resonance frequencies caused by the temperature dependence of the zero-field splitting.
+
+![Resonance frequencies versus temperature](results_odmr/frequencies_vs_temperature.png)
+
+---
+
+## 8. ODMR Spectra versus Microwave Power
+
+Illustrates microwave-power broadening while preserving the central resonance frequencies.
+
+![ODMR versus microwave power](results_odmr/odmr_vs_microwave_power.png)
+
+---
+
+## 9. Magnetic Sensitivity versus Photon Detection Rate
+
+Shows the improvement in magnetic sensitivity as the detected photon rate increases.
+
+![Magnetic sensitivity](results_odmr/magnetic_sensitivity_vs_photon_rate.png)
+
+---
+
+## 10. Resonance Frequencies versus Transverse Perturbation
+
+Shows how strain or electric-field effects lift the degeneracy of the \(m_s = \pm1\) states even without an external magnetic field.
+
+![Transverse perturbation](results_odmr/frequencies_vs_transverse_perturbation.png)
+
+---
+
+# 📝 Automatic Simulation Report
+
+Each execution generates a structured report:
+
+[`results_odmr/results_odmr.txt`](results_odmr/results_odmr.txt)
+
+The report includes:
+
+- Physical constants
+- Selected simulation parameters
+- Frequency sweep limits
+- Magnetic-field components
+- Energy eigenvalues
+- ODMR resonance frequencies
+- Zeeman splitting
+- Longitudinal magnetic-field estimation
+- Results for the four NV orientations
+- Temperature dependence
+- Photon and technical noise
+- Microwave-power broadening
+- Magnetic sensitivity
+- Minimum detectable magnetic field
+- Transverse perturbation results
+- List of generated files
+
+---
+
+# 📁 Repository Structure
+
+```text
+Quantum_Sensing_NV_Centers_in_Diamond/
 │
-├── docs/
-│ └── Quantum_Sensing_Study_Manual.pdf
+├── ODMR_Simulation.py
 │
-├── images/
-│ ├── odmr_without_magnetic_field.png
-│ ├── odmr_with_magnetic_field.png
-│ ├── frequencies_vs_field.png
-│ ├── frequencies_vs_angle.png
-│ └── evolution_odmr_with_magnetic_field.png
+├── Quantum_Sensing_Study_Manual.pdf
 │
 ├── results_odmr/
+│ ├── evolution_odmr_with_magnetic_field.png
+│ ├── frequencies_vs_angle.png
+│ ├── frequencies_vs_field.png
+│ ├── frequencies_vs_temperature.png
+│ ├── frequencies_vs_transverse_perturbation.png
+│ ├── magnetic_sensitivity_vs_photon_rate.png
+│ ├── odmr_four_nv_orientations.png
+│ ├── odmr_vs_microwave_power.png
+│ ├── odmr_without_magnetic_field.png
+│ ├── odmr_with_magnetic_field.png
 │ └── results_odmr.txt
 │
-├── odmr_simulation.py
-│
 └── README.md
+
+---
+
+# 🧪 Example Simulation Parameters
+
+A representative set of input parameters is:
+
+```text
+Magnetic field: 3 mT
+Angle relative to the NV axis: 20°
+Polar angle in the crystal: 45°
+Azimuthal angle: 20°
+Transverse perturbation E: 1 MHz
+Temperature: 25 °C
+Temperature sweep: -50 to 150 °C
+Relative microwave power: 4
+Photon detection rate: 2,500,000 photons/s
+Integration time: 0.01 s
+Relative technical noise: 0.002
 ```
 
----
-
-# Physics Implemented
-
-The current simulator includes the following physical concepts:
-
-- Zero-field splitting (D = 2.87 GHz)
-- Effective spin Hamiltonian (S = 1)
-- Zeeman interaction
-- Arbitrary magnetic-field orientation
-- Transverse perturbation parameter (E)
-- Hamiltonian diagonalization
-- Lorentzian ODMR spectra
-- Resonance-frequency calculation
-- Longitudinal magnetic-field estimation
-
-Future versions will progressively incorporate additional concepts presented in the study manual.
+These values produce clearly separated ODMR resonances and illustrate the different physical effects implemented in the simulator.
 
 ---
 
-# Research Progress
+# 🔧 Requirements
 
-Current project status:
+Python 3.11 or later.
 
-- ✅ Literature review completed
-- ✅ 75-page study manual completed
-- ✅ Original educational figures completed
-- ✅ ODMR simulator Version 2.0
-- ✅ Scientific figure generation
-- ✅ Automatic simulation report
-- 🔄 Experimental noise simulation
-- 🔄 Magnetic sensitivity estimation
-- 🔄 Lorentzian fitting
-- 🔄 Pulsed ODMR simulations
-
----
-
-# Requirements
-
-Python 3.11 or later
-
-Libraries:
+Required libraries:
 
 - NumPy
 - Matplotlib
 
-Install with:
+Install the dependencies with:
 
 ```bash
 pip install numpy matplotlib
@@ -207,7 +334,7 @@ pip install numpy matplotlib
 
 ---
 
-# Running the Simulator
+# ▶️ Running the Simulator
 
 Clone the repository:
 
@@ -215,25 +342,81 @@ Clone the repository:
 git clone https://github.com/sofianunezda/Quantum-sensing.git
 ```
 
-Run:
+Enter the repository directory:
 
 ```bash
-python odmr_simulation.py
+cd Quantum-sensing
 ```
 
-The program will ask for:
+Run the simulator:
 
-- Magnetic field
-- Magnetic-field angle
+```bash
+python ODMR_Simulation.py
+```
+
+The program asks the user to introduce:
+
+- Magnetic-field magnitude
+- Angle relative to a single NV axis
+- Polar angle of the magnetic field in the crystal
+- Azimuthal angle of the magnetic field
 - Transverse perturbation
+- Selected temperature
+- Temperature sweep limits
+- Relative microwave power
+- Photon detection rate
+- Integration time
+- Relative technical noise
 
-and automatically generate all figures and the simulation report.
+Pressing **Enter** uses the default value shown between brackets.
+
+All figures and the complete report are automatically saved in the `results_odmr` folder.
 
 ---
 
-# References
+# 🎓 Educational Purpose
 
-The project is based on scientific literature used during my internship at CINN.
+The main objective of this repository is to provide an accessible introduction to quantum sensing with NV centers in diamond.
+
+The project combines:
+
+- Theoretical background
+- Scientific literature review
+- Educational figures
+- Numerical implementation
+- Interactive simulations
+- Automatic data visualization
+- Structured result interpretation
+
+The manual explains the physical principles, while the simulator allows users to explore how these principles affect observable ODMR spectra.
+
+Together, both components form a self-contained educational resource connecting theory, computation and experimental concepts.
+
+---
+
+# 🚀 Possible Future Developments
+
+Possible extensions of the simulator include:
+
+- Pulsed ODMR simulations
+- Rabi oscillations
+- Ramsey interferometry
+- Hahn-echo sequences
+- Spin-relaxation simulations
+- $begin:math:text$T\_1$end:math:text$, $begin:math:text$T\_2$end:math:text$ and $begin:math:text$T\_2\^\*$end:math:text$ analysis
+- Hyperfine interaction
+- Coupling to nuclear spins
+- Multi-NV ensemble simulations
+- Lorentzian fitting of simulated or experimental data
+- Parameter estimation from experimental spectra
+- Graphical user interface
+- Comparison with laboratory measurements
+
+---
+
+# 📚 References
+
+The project is based on scientific literature studied during the internship at CINN.
 
 Main references include:
 
@@ -243,26 +426,24 @@ Main references include:
 - Dréau, A. et al. (2011)
 - Rondin, L. et al. (2014)
 
-Additional references are included in the study manual.
+Additional scientific references, books, theses, standards and technical documentation are included in the study manual.
 
 ---
 
-# Project Goals
+# 🏫 About the Project
 
-The purpose of this repository is to provide an educational introduction to quantum sensing based on nitrogen-vacancy (NV) centers in diamond.
+This repository was developed during an extracurricular internship at the **Nanomaterials and Nanotechnology Research Center (CINN)**.
 
-The project combines:
+The project began as a literature review on quantum sensing and progressively evolved into two complementary educational resources:
 
-- theoretical background;
-- educational material;
-- scientific illustrations;
-- numerical simulations.
+1. A comprehensive study manual explaining the theoretical and experimental foundations of quantum sensing with NV centers.
+2. An interactive Python simulator implementing the principal physical effects involved in ODMR experiments.
 
-Future developments will progressively extend the simulator while maintaining its educational focus and its correspondence with the accompanying study manual.
+The resulting repository reflects the full learning process: studying the scientific literature, organizing the theoretical foundations, creating educational illustrations, translating physical equations into code and interpreting the simulated results.
 
 ---
 
-# License
+# 📄 License
 
 This project is distributed under the MIT License.
 
@@ -270,18 +451,14 @@ If you use the study manual, figures or simulation code for academic or educatio
 
 ---
 
-# Author
+# 👩‍🔬 Author
 
 **Sofía Núñez de Andrés**
 
-Physics Student
-
+Physics Undergraduate Student
 University of Oviedo
 
 Extracurricular Internship
-
 Nanomaterials and Nanotechnology Research Center (CINN)
 
-GitHub:
-
-https://github.com/sofianunezda
+🔗 [LinkedIn](https://www.linkedin.com/in/sof%C3%ADa-n%C3%BA%C3%B1ez-de-andr%C3%A9s/)
