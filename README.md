@@ -92,7 +92,7 @@ The manual also contains:
 
 📄 **Study Manual**
 
-[`Quantum_Sensing_Study_Manual.pdf`](Quantum_Sensing_Study_Manual.pdf)
+[`Quantum_Sensing_Study_Manual.pdf`](docs/Quantum_Sensing_Study_Manual.pdf)
 
 ---
 
@@ -133,26 +133,30 @@ It also analyzes the effect of magnetic field, orientation, temperature, transve
 The simulator includes the following physical model:
 
 - Effective ground-state Hamiltonian for an NV center
-- Electronic spin \(S = 1\)
-- Zero-field splitting \(D \approx 2.87\ \text{GHz}\)
+- Electronic spin **S=1**
+- Zero-field splitting <strong>D &asymp; 2.87 GHz</strong>
 - Zeeman interaction
 - Electron gyromagnetic ratio
 - Arbitrary magnetic-field orientation
-- Transverse perturbation parameter \(E\)
+- Transverse perturbation parameter **E**
 - Numerical Hamiltonian diagonalization
 - Transition-frequency calculation
 - Four crystallographic directions of the NV center
 - Lorentzian ODMR line shapes
-- Temperature dependence of \(D\)
+- Temperature dependence of **D**
 - Microwave-power broadening
 
 The effective Hamiltonian used in the simulation includes:
 
-\[
-H = D S_z^2
-+ E(S_x^2-S_y^2)
-+ \gamma_e(B_xS_x+B_yS_y+B_zS_z)
-\]
+**H = D·S<sub>z</sub><sup>2</sup> + E·(S<sub>x</sub><sup>2</sup> - S<sub>y</sub><sup>2</sup>) + γ<sub>e</sub>·(B<sub>x</sub>S<sub>x</sub> + B<sub>y</sub>S<sub>y</sub> + B<sub>z</sub>S<sub>z</sub>)**
+
+where:
+
+- **D** is the zero-field splitting parameter.
+- **E** represents transverse strain or electric-field perturbations.
+- **γ<sub>e</sub>** is the electron gyromagnetic ratio.
+- **B<sub>x</sub>, B<sub>y</sub> and B<sub>z</sub>** are the magnetic-field components.
+- **S<sub>x</sub>, S<sub>y</sub> and S<sub>z</sub>** are the spin-1 matrices.
 
 The program obtains the energy eigenvalues numerically and calculates the ODMR transition frequencies from the differences between the spin-energy levels.
 
@@ -166,7 +170,7 @@ Each execution automatically generates ten figures.
 
 Shows the zero-field ODMR resonances and the splitting produced by the transverse perturbation parameter \(E\).
 
-![ODMR without magnetic field](results_odmr/odmr_without_magnetic_field.png)
+![ODMR without magnetic field](images/odmr_without_magnetic_field.png)
 
 ---
 
@@ -174,7 +178,7 @@ Shows the zero-field ODMR resonances and the splitting produced by the transvers
 
 Shows the Zeeman splitting of the ODMR resonances under an applied magnetic field.
 
-![ODMR with magnetic field](results_odmr/odmr_with_magnetic_field.png)
+![ODMR with magnetic field](images/odmr_with_magnetic_field.png)
 
 ---
 
@@ -182,7 +186,7 @@ Shows the Zeeman splitting of the ODMR resonances under an applied magnetic fiel
 
 Represents the evolution of the two main resonance frequencies as the magnetic-field magnitude increases.
 
-![Resonance frequencies versus magnetic field](results_odmr/frequencies_vs_field.png)
+![Resonance frequencies versus magnetic field](images/frequencies_vs_field.png)
 
 ---
 
@@ -190,7 +194,7 @@ Represents the evolution of the two main resonance frequencies as the magnetic-f
 
 Shows how the ODMR resonance frequencies depend on the angle between the magnetic field and the NV axis.
 
-![Resonance frequencies versus angle](results_odmr/frequencies_vs_angle.png)
+![Resonance frequencies versus angle](images/frequencies_vs_angle.png)
 
 ---
 
@@ -198,7 +202,7 @@ Shows how the ODMR resonance frequencies depend on the angle between the magneti
 
 Displays several ODMR spectra for different magnetic-field values.
 
-![ODMR evolution with magnetic field](results_odmr/evolution_odmr_with_magnetic_field.png)
+![ODMR evolution with magnetic field](images/evolution_odmr_with_magnetic_field.png)
 
 ---
 
@@ -206,7 +210,7 @@ Displays several ODMR spectra for different magnetic-field values.
 
 Combines the transitions produced by the four crystallographic NV orientations in diamond.
 
-![Four NV orientations](results_odmr/odmr_four_nv_orientations.png)
+![Four NV orientations](images/odmr_four_nv_orientations.png)
 
 ---
 
@@ -214,7 +218,7 @@ Combines the transitions produced by the four crystallographic NV orientations i
 
 Shows the displacement of the ODMR resonance frequencies caused by the temperature dependence of the zero-field splitting.
 
-![Resonance frequencies versus temperature](results_odmr/frequencies_vs_temperature.png)
+![Resonance frequencies versus temperature](images/frequencies_vs_temperature.png)
 
 ---
 
@@ -222,7 +226,7 @@ Shows the displacement of the ODMR resonance frequencies caused by the temperatu
 
 Illustrates microwave-power broadening while preserving the central resonance frequencies.
 
-![ODMR versus microwave power](results_odmr/odmr_vs_microwave_power.png)
+![ODMR versus microwave power](images/odmr_vs_microwave_power.png)
 
 ---
 
@@ -230,15 +234,15 @@ Illustrates microwave-power broadening while preserving the central resonance fr
 
 Shows the improvement in magnetic sensitivity as the detected photon rate increases.
 
-![Magnetic sensitivity](results_odmr/magnetic_sensitivity_vs_photon_rate.png)
+![Magnetic sensitivity](images/magnetic_sensitivity_vs_photon_rate.png)
 
 ---
 
 ## 10. Resonance Frequencies versus Transverse Perturbation
 
-Shows how strain or electric-field effects lift the degeneracy of the \(m_s = \pm1\) states even without an external magnetic field.
+Shows how strain or electric-field effects lift the degeneracy of the m<sub>s</sub> = &plusmn;1 states even without an external magnetic field.
 
-![Transverse perturbation](results_odmr/frequencies_vs_transverse_perturbation.png)
+![Transverse perturbation](images/frequencies_vs_transverse_perturbation.png)
 
 ---
 
@@ -246,7 +250,7 @@ Shows how strain or electric-field effects lift the degeneracy of the \(m_s = \p
 
 Each execution generates a structured report:
 
-[`results_odmr/results_odmr.txt`](results_odmr/results_odmr.txt)
+[`results_odmr/results_ODMR.txt`](results/results_ODMR.txt)
 
 The report includes:
 
@@ -289,7 +293,7 @@ Quantum_Sensing_NV_Centers_in_Diamond/
 │ ├── odmr_vs_microwave_power.png
 │ ├── odmr_without_magnetic_field.png
 │ ├── odmr_with_magnetic_field.png
-│ └── results_odmr.txt
+│ └── results_ODMR.txt
 │
 └── README.md
 
@@ -403,7 +407,8 @@ Possible extensions of the simulator include:
 - Ramsey interferometry
 - Hahn-echo sequences
 - Spin-relaxation simulations
-- $begin:math:text$T\_1$end:math:text$, $begin:math:text$T\_2$end:math:text$ and $begin:math:text$T\_2\^\*$end:math:text$ analysis
+- T<sub>1</sub> relaxation simulations
+- T<sub>2</sub> and T<sub>2</sub><sup>*</sup> coherence analysis
 - Hyperfine interaction
 - Coupling to nuclear spins
 - Multi-NV ensemble simulations
