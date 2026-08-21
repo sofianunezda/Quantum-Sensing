@@ -278,11 +278,18 @@ The report includes:
 ```text
 Quantum_Sensing_NV_Centers_in_Diamond/
 │
+├── README.md
+|
 ├── ODMR_Simulation.py
 │
-├── Quantum_Sensing_Study_Manual.pdf
+├── LICENSE
 │
+├── requirements.txt
+|
 ├── results_odmr/
+│ ├── results_ODMR.txt
+│
+├── images/
 │ ├── evolution_odmr_with_magnetic_field.png
 │ ├── frequencies_vs_angle.png
 │ ├── frequencies_vs_field.png
@@ -293,9 +300,9 @@ Quantum_Sensing_NV_Centers_in_Diamond/
 │ ├── odmr_vs_microwave_power.png
 │ ├── odmr_without_magnetic_field.png
 │ ├── odmr_with_magnetic_field.png
-│ └── results_ODMR.txt
 │
-└── README.md
+├── docs/
+└──── Quantum_Sensing_Study_Manual.pdf
 
 ---
 
