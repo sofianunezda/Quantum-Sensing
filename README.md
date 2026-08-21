@@ -133,7 +133,7 @@ It also analyzes the effect of magnetic field, orientation, temperature, transve
 The simulator includes the following physical model:
 
 - Effective ground-state Hamiltonian for an NV center
-- Electronic spin $S=1$
+- Electronic spin $S = 1$
 - Zero-field splitting $D \approx 2.87\ \mathrm{GHz}$
 - Zeeman interaction
 - Electron gyromagnetic ratio
@@ -148,17 +148,9 @@ The simulator includes the following physical model:
 
 The effective Hamiltonian used in the simulation is
 
-$$
-H =
-D S_z^2
-+
-E\left(S_x^2-S_y^2\right)
-+
-\gamma_e
-\left(
-B_xS_x+B_yS_y+B_zS_z
-\right)
-$$
+```math
+H = D S_z^2 + E \left(S_x^2-S_y^2\right) + \gamma_e\left(B_xS_x+B_yS_y+B_zS_z\right)
+```
 
 where:
 
