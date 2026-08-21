@@ -39,7 +39,7 @@ The project was designed as an educational resource for students beginning in qu
 - ✅ Microwave-power broadening
 - ✅ Photon shot-noise simulation
 - ✅ Technical-noise simulation
-- ✅ Magnetic-field estimation from resonance splitting
+- ✅ Longitudinal magnetic-field estimation from resonance splitting
 - ✅ Magnetic-sensitivity estimation
 - ✅ Automatic generation of ten scientific figures
 - ✅ Automatic generation of a structured TXT simulation report
@@ -115,7 +115,7 @@ It also analyzes the effect of magnetic field, orientation, temperature, transve
 - Magnetic-field vector decomposition
 - Magnetic-field projection onto each NV orientation
 - Resonance-frequency calculation
-- Magnetic-field reconstruction from Zeeman splitting
+- Longitudinal magnetic-field estimation from Zeeman splitting
 - Temperature-dependent zero-field splitting
 - Transverse perturbation simulation
 - Microwave-power broadening
@@ -133,30 +133,40 @@ It also analyzes the effect of magnetic field, orientation, temperature, transve
 The simulator includes the following physical model:
 
 - Effective ground-state Hamiltonian for an NV center
-- Electronic spin **S=1**
-- Zero-field splitting <strong>D &asymp; 2.87 GHz</strong>
+- Electronic spin $S=1$
+- Zero-field splitting $D \approx 2.87\ \mathrm{GHz}$
 - Zeeman interaction
 - Electron gyromagnetic ratio
 - Arbitrary magnetic-field orientation
-- Transverse perturbation parameter **E**
+- Transverse perturbation parameter $E$
 - Numerical Hamiltonian diagonalization
 - Transition-frequency calculation
 - Four crystallographic directions of the NV center
 - Lorentzian ODMR line shapes
-- Temperature dependence of **D**
+- Temperature dependence of $D$
 - Microwave-power broadening
 
-The effective Hamiltonian used in the simulation includes:
+The effective Hamiltonian used in the simulation is
 
-**H = D·S<sub>z</sub><sup>2</sup> + E·(S<sub>x</sub><sup>2</sup> - S<sub>y</sub><sup>2</sup>) + γ<sub>e</sub>·(B<sub>x</sub>S<sub>x</sub> + B<sub>y</sub>S<sub>y</sub> + B<sub>z</sub>S<sub>z</sub>)**
+$$
+H =
+D S_z^2
++
+E\left(S_x^2-S_y^2\right)
++
+\gamma_e
+\left(
+B_xS_x+B_yS_y+B_zS_z
+\right)
+$$
 
 where:
 
-- **D** is the zero-field splitting parameter.
-- **E** represents transverse strain or electric-field perturbations.
-- **γ<sub>e</sub>** is the electron gyromagnetic ratio.
-- **B<sub>x</sub>, B<sub>y</sub> and B<sub>z</sub>** are the magnetic-field components.
-- **S<sub>x</sub>, S<sub>y</sub> and S<sub>z</sub>** are the spin-1 matrices.
+- $D$ is the zero-field splitting parameter.
+- $E$ represents transverse strain or electric-field perturbations.
+- $\gamma_e$ is the electron gyromagnetic ratio.
+- $B_x$, $B_y$ and $B_z$ are the magnetic-field components.
+- $S_x$, $S_y$ and $S_z$ are the spin-1 matrices.
 
 The program obtains the energy eigenvalues numerically and calculates the ODMR transition frequencies from the differences between the spin-energy levels.
 
@@ -164,11 +174,11 @@ The program obtains the energy eigenvalues numerically and calculates the ODMR t
 
 # 📊 Generated Figures
 
-Each execution automatically generates ten figures.
+Each execution automatically generates ten scientific figures.
 
 ## 1. ODMR Spectrum without Magnetic Field
 
-Shows the zero-field ODMR resonances and the splitting produced by the transverse perturbation parameter \(E\).
+Shows the zero-field ODMR resonances and the splitting produced by the transverse perturbation parameter $E$.
 
 ![ODMR without magnetic field](images/odmr_without_magnetic_field.png)
 
@@ -240,7 +250,7 @@ Shows the improvement in magnetic sensitivity as the detected photon rate increa
 
 ## 10. Resonance Frequencies versus Transverse Perturbation
 
-Shows how strain or electric-field effects lift the degeneracy of the m<sub>s</sub> = &plusmn;1 states even without an external magnetic field.
+Shows how strain or electric-field effects lift the degeneracy of the $m_s=\pm1$ states even without an external magnetic field.
 
 ![Transverse perturbation](images/frequencies_vs_transverse_perturbation.png)
 
@@ -248,9 +258,9 @@ Shows how strain or electric-field effects lift the degeneracy of the m<sub>s</s
 
 # 📝 Automatic Simulation Report
 
-Each execution generates a structured report:
+Each execution generates a structured text report:
 
-[`results_odmr/results_ODMR.txt`](results/results_ODMR.txt)
+[`results/results_ODMR.txt`](results/results_ODMR.txt)
 
 The report includes:
 
@@ -276,33 +286,32 @@ The report includes:
 # 📁 Repository Structure
 
 ```text
-Quantum_Sensing_NV_Centers_in_Diamond/
+Quantum-Sensing/
 │
 ├── README.md
-|
 ├── ODMR_Simulation.py
-│
 ├── LICENSE
-│
 ├── requirements.txt
-|
-├── results_odmr/
-│ ├── results_ODMR.txt
-│
-├── images/
-│ ├── evolution_odmr_with_magnetic_field.png
-│ ├── frequencies_vs_angle.png
-│ ├── frequencies_vs_field.png
-│ ├── frequencies_vs_temperature.png
-│ ├── frequencies_vs_transverse_perturbation.png
-│ ├── magnetic_sensitivity_vs_photon_rate.png
-│ ├── odmr_four_nv_orientations.png
-│ ├── odmr_vs_microwave_power.png
-│ ├── odmr_without_magnetic_field.png
-│ ├── odmr_with_magnetic_field.png
 │
 ├── docs/
-└──── Quantum_Sensing_Study_Manual.pdf
+│   └── Quantum_Sensing_Study_Manual.pdf
+│
+├── images/
+│   ├── evolution_odmr_with_magnetic_field.png
+│   ├── frequencies_vs_angle.png
+│   ├── frequencies_vs_field.png
+│   ├── frequencies_vs_temperature.png
+│   ├── frequencies_vs_transverse_perturbation.png
+│   ├── magnetic_sensitivity_vs_photon_rate.png
+│   ├── odmr_four_nv_orientations.png
+│   ├── odmr_vs_microwave_power.png
+│   ├── odmr_with_magnetic_field.png
+│   ├── odmr_without_magnetic_field.png
+│   └── quantum_sensing_preview_collage.png
+│
+└── results/
+    └── results_ODMR.txt
+```
 
 ---
 
@@ -340,7 +349,14 @@ Required libraries:
 Install the dependencies with:
 
 ```bash
-pip install numpy matplotlib
+pip install -r requirements.txt
+```
+
+The `requirements.txt` file contains:
+
+```text
+numpy
+matplotlib
 ```
 
 ---
@@ -357,6 +373,12 @@ Enter the repository directory:
 
 ```bash
 cd Quantum-sensing
+```
+
+Install the dependencies:
+
+```bash
+pip install -r requirements.txt
 ```
 
 Run the simulator:
@@ -381,7 +403,7 @@ The program asks the user to introduce:
 
 Pressing **Enter** uses the default value shown between brackets.
 
-All figures and the complete report are automatically saved in the `results_odmr` folder.
+All figures and the complete simulation report are generated automatically.
 
 ---
 
@@ -414,8 +436,8 @@ Possible extensions of the simulator include:
 - Ramsey interferometry
 - Hahn-echo sequences
 - Spin-relaxation simulations
-- T<sub>1</sub> relaxation simulations
-- T<sub>2</sub> and T<sub>2</sub><sup>*</sup> coherence analysis
+- $T_1$ relaxation simulations
+- $T_2$ and $T_2^*$ coherence analysis
 - Hyperfine interaction
 - Coupling to nuclear spins
 - Multi-NV ensemble simulations
@@ -467,10 +489,10 @@ If you use the study manual, figures or simulation code for academic or educatio
 
 **Sofía Núñez de Andrés**
 
-Physics Undergraduate Student
+Physics Undergraduate Student  
 University of Oviedo
 
-Extracurricular Internship
+Extracurricular Internship  
 Nanomaterials and Nanotechnology Research Center (CINN)
 
 🔗 [LinkedIn](https://www.linkedin.com/in/sof%C3%ADa-n%C3%BA%C3%B1ez-de-andr%C3%A9s/)
